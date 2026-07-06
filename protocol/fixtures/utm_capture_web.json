@@ -1,0 +1,61 @@
+{
+  "name": "utm_capture_web",
+  "description": "Web only: UTM parameters are captured from the page URL once per session and attached as context.utm to the first batch only.",
+  "platforms": ["web"],
+  "steps": [
+    {
+      "do": "init",
+      "apiKey": "pk_fixture",
+      "options": {},
+      "pageUrl": "https://example.test/landing?utm_source=tw&utm_medium=social&utm_campaign=launch&irrelevant=1"
+    },
+    { "do": "track", "event": "visit", "properties": {} },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$uuid4",
+              "event": "visit",
+              "properties": {},
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            }
+          ],
+          "context": {
+            "sdk": { "name": "$string", "version": "$string" },
+            "utm": { "source": "tw", "medium": "social", "campaign": "launch" }
+          }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    { "do": "track", "event": "second", "properties": {} },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$uuid4",
+              "event": "second",
+              "properties": {},
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    { "do": "expectNoRequest" }
+  ]
+}

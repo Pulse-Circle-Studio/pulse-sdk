@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "baseUrl": ".",
+    "lib": ["ES2020", "DOM"],
+    "types": ["node"],
+    "paths": {
+      "@pulse/core": ["packages/core/src/index.ts"],
+      "@pulse/core/testing": ["packages/core/src/testing.ts"],
+      "@pulse/web": ["packages/web/src/index.ts"],
+      "@pulse/react-native": ["packages/react-native/src/index.ts"]
+    }
+  },
+  "include": ["packages/*/src/**/*.ts", "packages/*/test/**/*.ts", "*.ts"]
+}

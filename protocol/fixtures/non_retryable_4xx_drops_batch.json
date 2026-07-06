@@ -1,0 +1,38 @@
+{
+  "name": "non_retryable_4xx_drops_batch",
+  "description": "A 400 drops the batch (deterministic rejection, retrying cannot succeed); subsequent events still flow.",
+  "steps": [
+    { "do": "init", "apiKey": "pk_fixture", "options": {} },
+    { "do": "track", "event": "dropped", "properties": {} },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": { "path": "/v1/batch" },
+      "respond": { "status": 400, "body": { "error": "invalid_body" } }
+    },
+    { "do": "expectNoRequest" },
+    { "do": "track", "event": "survives", "properties": {} },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$uuid4",
+              "event": "survives",
+              "properties": {},
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    { "do": "expectNoRequest" }
+  ]
+}

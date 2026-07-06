@@ -1,0 +1,68 @@
+{
+  "name": "rejected_items_not_retried",
+  "description": "A 2xx response with entries in rejected[] is terminal: rejected items are never resent, and the next flush carries only new events.",
+  "steps": [
+    { "do": "init", "apiKey": "pk_fixture", "options": {} },
+    { "do": "track", "event": "good", "properties": {} },
+    { "do": "track", "event": "bad", "properties": {} },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$uuid4",
+              "event": "good",
+              "properties": {},
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            },
+            {
+              "type": "track",
+              "anonymous_id": "$uuid4",
+              "event": "bad",
+              "properties": {},
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": {
+        "status": 200,
+        "body": {
+          "accepted": ["$key:0"],
+          "rejected": [{ "key": "$key:1", "reason": "timestamp_in_future" }]
+        }
+      }
+    },
+    { "do": "expectNoRequest" },
+    { "do": "track", "event": "next", "properties": {} },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$uuid4",
+              "event": "next",
+              "properties": {},
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    { "do": "expectNoRequest" }
+  ]
+}

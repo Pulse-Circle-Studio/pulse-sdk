@@ -1,0 +1,57 @@
+{
+  "name": "offline_buffer_order_and_batch_cap",
+  "description": "120 events buffered while offline drain in order once the network returns, split into batches of at most 100, with the retried head batch byte-stable.",
+  "steps": [
+    { "do": "init", "apiKey": "pk_fixture", "options": { "flushAt": 1000, "flushIntervalMs": 3600000 } },
+    { "do": "trackMany", "count": 120, "event": "bulk", "indexProperty": "i" },
+    { "do": "expectNoRequest" },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": { "$seq": { "event": "bulk", "indexProperty": "i", "start": 0, "count": 100 } },
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "networkError": true }
+    },
+    { "do": "advance", "ms": 1300 },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": { "$seq": { "event": "bulk", "indexProperty": "i", "start": 0, "count": 100 } },
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "networkError": true }
+    },
+    { "do": "advance", "ms": 2500 },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": { "$seq": { "event": "bulk", "indexProperty": "i", "start": 0, "count": 100 } },
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": { "$seq": { "event": "bulk", "indexProperty": "i", "start": 100, "count": 20 } },
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    { "do": "expectNoRequest" }
+  ]
+}

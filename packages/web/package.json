@@ -1,0 +1,51 @@
+{
+  "name": "@pulse/web",
+  "version": "0.1.0",
+  "description": "Pulse analytics for the browser: a ≤10 KB, zero-dependency SDK with a persistent offline queue, idempotent delivery, and identity. Add analytics to your web app in two lines.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pulse-Circle-Studio/pulse-sdk.git",
+    "directory": "packages/web"
+  },
+  "homepage": "https://github.com/Pulse-Circle-Studio/pulse-sdk/tree/main/packages/web#readme",
+  "keywords": ["analytics", "web analytics", "events", "tracking", "pulse", "offline-first", "utm"],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./dist/pulse.iife.global.js",
+  "jsdelivr": "./dist/pulse.iife.global.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup",
+    "size": "size-limit"
+  },
+  "size-limit": [
+    {
+      "name": "ESM bundle (gzip)",
+      "path": "dist/index.js",
+      "limit": "10 KB"
+    },
+    {
+      "name": "script-tag bundle (gzip)",
+      "path": "dist/pulse.iife.global.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@pulse/core": "0.1.0",
+    "@size-limit/preset-small-lib": "^11.1.6",
+    "size-limit": "^11.1.6"
+  },
+  "engines": { "node": ">=18" },
+  "publishConfig": { "access": "public" }
+}

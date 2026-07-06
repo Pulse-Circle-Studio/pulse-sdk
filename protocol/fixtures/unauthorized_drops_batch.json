@@ -1,0 +1,38 @@
+{
+  "name": "unauthorized_drops_batch",
+  "description": "401 drops the batch (never retried) and the queue keeps working for later events; the invalid-key error is logged once per client, not per batch.",
+  "steps": [
+    { "do": "init", "apiKey": "pk_wrong", "options": {} },
+    { "do": "track", "event": "first", "properties": {} },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": { "path": "/v1/batch", "headers": { "authorization": "Bearer pk_wrong" } },
+      "respond": { "status": 401, "body": { "error": "unauthorized" } }
+    },
+    { "do": "expectNoRequest" },
+    { "do": "track", "event": "second", "properties": {} },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$uuid4",
+              "event": "second",
+              "properties": {},
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    { "do": "expectNoRequest" }
+  ]
+}

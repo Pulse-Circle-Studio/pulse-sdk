@@ -1,0 +1,33 @@
+{
+  "name": "flush_interval_timer",
+  "description": "The flush interval timer, armed by the first unflushed event, flushes the queue when it elapses.",
+  "steps": [
+    { "do": "init", "apiKey": "pk_fixture", "options": { "flushIntervalMs": 10000 } },
+    { "do": "track", "event": "timed", "properties": {} },
+    { "do": "expectNoRequest" },
+    { "do": "advance", "ms": 9999 },
+    { "do": "expectNoRequest" },
+    { "do": "advance", "ms": 1 },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$uuid4",
+              "event": "timed",
+              "properties": {},
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    { "do": "expectNoRequest" }
+  ]
+}

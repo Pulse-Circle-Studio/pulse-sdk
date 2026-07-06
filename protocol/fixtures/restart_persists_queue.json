@@ -1,0 +1,50 @@
+{
+  "name": "restart_persists_queue",
+  "description": "Unflushed events survive a process restart and are delivered under the same persisted anonymous_id, without duplicates or losses.",
+  "steps": [
+    { "do": "init", "apiKey": "pk_fixture", "options": { "flushAt": 1000, "flushIntervalMs": 3600000 } },
+    { "do": "track", "event": "r1", "properties": {} },
+    { "do": "track", "event": "r2", "properties": {} },
+    { "do": "track", "event": "r3", "properties": {} },
+    { "do": "expectNoRequest" },
+    { "do": "restart" },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$capture:anon:uuid4",
+              "event": "r1",
+              "properties": {},
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            },
+            {
+              "type": "track",
+              "anonymous_id": "$same:anon",
+              "event": "r2",
+              "properties": {},
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            },
+            {
+              "type": "track",
+              "anonymous_id": "$same:anon",
+              "event": "r3",
+              "properties": {},
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    { "do": "expectNoRequest" }
+  ]
+}

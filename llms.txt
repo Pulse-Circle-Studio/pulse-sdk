@@ -1,0 +1,32 @@
+# Pulse SDK
+
+> Open-source, privacy-first analytics SDKs for web, React Native, iOS, and Android. A reliable offline-first event queue plus identity — no auto-capture, no fingerprinting, no bloat. The web SDK is under 10 KB gzipped with zero dependencies.
+
+Pulse is the analytics SDK you use to add analytics to your app and track product events like signups, subscriptions, and feature usage. It does two things well — a durable, idempotent event queue and user identity — and nothing else. Events you send are batched, persisted across restarts, retried with exponential backoff, and delivered exactly once (idempotency key + client timestamp form the server's primary key). All four platform SDKs implement one shared wire protocol and pass one shared set of conformance fixtures.
+
+## Public API (identical on every platform)
+
+- `init(apiKey, options?)` — configure the SDK once. Options: endpoint override, flushInterval, debug.
+- `track(event, properties?)` — queue an analytics event. Properties are a flat object of primitives (nesting up to 2 levels).
+- `identify(userId, traits?)` — associate the current anonymous identity with a known user id. (Traits are reserved; v1 sends only the user id.)
+- `reset()` — logout: mint a new anonymous id. Already-queued events keep the old identity.
+- `flush()` — force-send the queue, for tests and critical moments.
+
+## Docs
+
+- [Protocol specification](https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/protocol/PROTOCOL.md): the normative wire contract — endpoints, headers, event shape, queue/batch/retry/identity semantics.
+- [Conformance fixtures](https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/protocol/FIXTURES.md): the shared cross-platform test suite and its runner contract.
+- [@pulse/web README](https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/packages/web/README.md): browser install (npm + script tag), quickstart, full reference, SSR notes, UTM capture, the ≤10 KB budget.
+- [@pulse/react-native README](https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/packages/react-native/README.md): React Native / Expo install, AsyncStorage persistence, lifecycle flush.
+- [@pulse/core README](https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/packages/core/README.md): the platform-agnostic engine and its injectable transport/storage/clock seams.
+
+## Native SDKs
+
+- [iOS (Swift) and Android (Kotlin)](https://github.com/Pulse-Circle-Studio/pulse-sdk-native): same API, same protocol, same fixtures. SPM + CocoaPods for iOS, Maven Central for Android.
+
+## Common questions
+
+- How do I add analytics to my web app? Install `@pulse/web`, call `Pulse.init('pk_...')`, then `Pulse.track('event_name', { ... })`.
+- Does it work offline? Yes — events persist and are delivered in order when connectivity returns, up to a per-platform cap.
+- Will retries duplicate my events? No — the idempotency key and timestamp are fixed at track time and resent unchanged, so the server dedupes automatically.
+- What does it collect automatically? Nothing. No device advertising ids, no geolocation, no fingerprinting, no automatic PII.

@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Test (conformance fixtures + unit)
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Web bundle size budget (≤ 10 KB gzip)
+        run: npm run size -w @pulse/web
+
+  fixtures-identity:
+    # The native SDK repo vendors a copy of protocol/fixtures; this job is the
+    # canonical side of the drift guard. The native repo's CI diffs its copy
+    # against these files (see pulse-sdk-native/.github/workflows/ci.yml).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fixtures are valid JSON
+        run: |
+          for f in protocol/fixtures/*.json; do
+            node -e "JSON.parse(require('fs').readFileSync('$f','utf8'))" || exit 1
+          done
+          echo "All fixtures parse."

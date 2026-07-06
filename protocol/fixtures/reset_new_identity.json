@@ -1,0 +1,54 @@
+{
+  "name": "reset_new_identity",
+  "description": "reset() mints a new anonymous_id and clears user_id, while events already in the queue keep the identity they were tracked under.",
+  "steps": [
+    { "do": "init", "apiKey": "pk_fixture", "options": {} },
+    { "do": "identify", "userId": "u_1" },
+    { "do": "track", "event": "old_identity", "properties": {} },
+    { "do": "reset" },
+    { "do": "track", "event": "fresh_identity", "properties": {} },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/identify",
+        "body": {
+          "anonymous_id": "$capture:anon1:uuid4",
+          "user_id": "u_1",
+          "idempotency_key": "$identifyKey"
+        }
+      },
+      "respond": { "status": 200, "body": { "status": "ok", "canonical_user_id": "c-1" } }
+    },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$same:anon1",
+              "user_id": "u_1",
+              "event": "old_identity",
+              "properties": {},
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            },
+            {
+              "type": "track",
+              "anonymous_id": "$differs:anon1:uuid4",
+              "event": "fresh_identity",
+              "properties": {},
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    { "do": "expectNoRequest" }
+  ]
+}

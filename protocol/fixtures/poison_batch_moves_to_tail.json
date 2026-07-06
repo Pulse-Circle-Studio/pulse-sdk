@@ -1,0 +1,108 @@
+{
+  "name": "poison_batch_moves_to_tail",
+  "description": "A batch that fails 10 consecutive attempts moves to the tail of the queue (as a pinned unit, keys unchanged) so it cannot block newer events; after the queue drains past it, it is retried again.",
+  "steps": [
+    { "do": "init", "apiKey": "pk_fixture", "options": { "flushAt": 1000, "flushIntervalMs": 3600000 } },
+    { "do": "track", "event": "poison", "properties": {} },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$capture:anon:uuid4",
+              "event": "poison",
+              "properties": {},
+              "idempotency_key": "$capture:pkey:eventKey",
+              "timestamp": "$capture:pts:isoTimestamp"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 500, "body": { "error": "internal" } }
+    },
+    { "do": "track", "event": "healthy", "properties": {} },
+    { "do": "advance", "ms": 1300 },
+    { "do": "expectRequest", "request": { "path": "/v1/batch" }, "respond": { "status": 500, "body": { "error": "internal" } } },
+    { "do": "advance", "ms": 2500 },
+    { "do": "expectRequest", "request": { "path": "/v1/batch" }, "respond": { "status": 500, "body": { "error": "internal" } } },
+    { "do": "advance", "ms": 4900 },
+    { "do": "expectRequest", "request": { "path": "/v1/batch" }, "respond": { "status": 500, "body": { "error": "internal" } } },
+    { "do": "advance", "ms": 9700 },
+    { "do": "expectRequest", "request": { "path": "/v1/batch" }, "respond": { "status": 500, "body": { "error": "internal" } } },
+    { "do": "advance", "ms": 19300 },
+    { "do": "expectRequest", "request": { "path": "/v1/batch" }, "respond": { "status": 500, "body": { "error": "internal" } } },
+    { "do": "advance", "ms": 38500 },
+    { "do": "expectRequest", "request": { "path": "/v1/batch" }, "respond": { "status": 500, "body": { "error": "internal" } } },
+    { "do": "advance", "ms": 76900 },
+    { "do": "expectRequest", "request": { "path": "/v1/batch" }, "respond": { "status": 500, "body": { "error": "internal" } } },
+    { "do": "advance", "ms": 153700 },
+    { "do": "expectRequest", "request": { "path": "/v1/batch" }, "respond": { "status": 500, "body": { "error": "internal" } } },
+    { "do": "advance", "ms": 307300 },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$same:anon",
+              "event": "poison",
+              "properties": {},
+              "idempotency_key": "$same:pkey",
+              "timestamp": "$same:pts"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 500, "body": { "error": "internal" } }
+    },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$same:anon",
+              "event": "healthy",
+              "properties": {},
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$same:anon",
+              "event": "poison",
+              "properties": {},
+              "idempotency_key": "$same:pkey",
+              "timestamp": "$same:pts"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    { "do": "expectNoRequest" }
+  ]
+}

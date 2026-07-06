@@ -1,0 +1,39 @@
+{
+  "name": "@pulse/react-native",
+  "version": "0.1.0",
+  "description": "Pulse analytics for React Native and Expo: pure JS (no native modules), persistent offline queue over AsyncStorage, idempotent delivery, identity.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pulse-Circle-Studio/pulse-sdk.git",
+    "directory": "packages/react-native"
+  },
+  "homepage": "https://github.com/Pulse-Circle-Studio/pulse-sdk/tree/main/packages/react-native#readme",
+  "keywords": ["analytics", "react-native", "expo", "events", "tracking", "pulse", "offline-first"],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs --dts --clean --sourcemap"
+  },
+  "dependencies": {
+    "@pulse/core": "0.1.0"
+  },
+  "peerDependencies": {
+    "@react-native-async-storage/async-storage": ">=1.17.0",
+    "@react-native-community/netinfo": ">=9.0.0",
+    "react-native": ">=0.70.0"
+  },
+  "peerDependenciesMeta": {
+    "@react-native-community/netinfo": { "optional": true }
+  },
+  "engines": { "node": ">=18" },
+  "publishConfig": { "access": "public" }
+}

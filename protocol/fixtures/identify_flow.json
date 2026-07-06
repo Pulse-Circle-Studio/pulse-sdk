@@ -1,0 +1,73 @@
+{
+  "name": "identify_flow",
+  "description": "identify() splits batches to preserve order: events before identify carry only anonymous_id, /v1/identify goes out exactly once per pair, events after identify carry user_id + anonymous_id; a repeated identify with the same pair sends nothing.",
+  "steps": [
+    { "do": "init", "apiKey": "pk_fixture", "options": {} },
+    { "do": "track", "event": "before", "properties": {} },
+    { "do": "identify", "userId": "u_1" },
+    { "do": "track", "event": "after", "properties": {} },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$capture:anon:uuid4",
+              "event": "before",
+              "properties": {},
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/identify",
+        "headers": {
+          "authorization": "Bearer pk_fixture",
+          "content-type": "application/json",
+          "x-pulse-protocol": "1"
+        },
+        "body": {
+          "anonymous_id": "$same:anon",
+          "user_id": "u_1",
+          "idempotency_key": "$identifyKey"
+        }
+      },
+      "respond": { "status": 200, "body": { "status": "ok", "canonical_user_id": "c-1" } }
+    },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$same:anon",
+              "user_id": "u_1",
+              "event": "after",
+              "properties": {},
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    { "do": "expectNoRequest" },
+    { "do": "identify", "userId": "u_1" },
+    { "do": "flush" },
+    { "do": "expectNoRequest" }
+  ]
+}

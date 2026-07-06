@@ -1,0 +1,36 @@
+{
+  "name": "@pulse/core",
+  "version": "0.1.0",
+  "description": "Platform-agnostic core for Pulse analytics SDKs: persistent ordered event queue, idempotent delivery, identity. No DOM or React Native APIs.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pulse-Circle-Studio/pulse-sdk.git",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/Pulse-Circle-Studio/pulse-sdk/tree/main/packages/core#readme",
+  "keywords": ["analytics", "events", "tracking", "pulse", "offline-first", "idempotent"],
+  "type": "module",
+  "sideEffects": false,
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "import": "./dist/testing.js",
+      "require": "./dist/testing.cjs"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsup src/index.ts src/testing.ts --format esm,cjs --dts --clean --sourcemap"
+  },
+  "engines": { "node": ">=18" },
+  "publishConfig": { "access": "public" }
+}

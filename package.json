@@ -1,0 +1,26 @@
+{
+  "name": "pulse-sdk",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Pulse analytics SDKs for web and React Native — reliable event queue + identity, nothing else",
+  "license": "MIT",
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "vitest run",
+    "lint": "eslint packages/*/src packages/*/test",
+    "typecheck": "tsc --build",
+    "size": "npm run size -w @pulse/web"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "eslint": "^9.17.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.0",
+    "vitest": "^2.1.8"
+  }
+}

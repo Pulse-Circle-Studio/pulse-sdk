@@ -1,0 +1,36 @@
+{
+  "name": "single_track_flush",
+  "description": "Basic wire shape: one track + flush produces one /v1/batch with auth headers, protocol header, context.sdk, and a fully-formed event.",
+  "steps": [
+    { "do": "init", "apiKey": "pk_fixture", "options": {} },
+    { "do": "track", "event": "signup", "properties": { "plan": "pro" } },
+    { "do": "expectNoRequest" },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "headers": {
+          "authorization": "Bearer pk_fixture",
+          "content-type": "application/json",
+          "x-pulse-protocol": "1"
+        },
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$uuid4",
+              "event": "signup",
+              "properties": { "plan": "pro" },
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    { "do": "expectNoRequest" }
+  ]
+}

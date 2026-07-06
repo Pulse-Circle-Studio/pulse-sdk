@@ -1,0 +1,38 @@
+{
+  "name": "deep_properties_sanitized",
+  "description": "Property values nested deeper than 2 levels are dropped (with a debug warning) at track time; the event itself is kept.",
+  "steps": [
+    { "do": "init", "apiKey": "pk_fixture", "options": {} },
+    {
+      "do": "track",
+      "event": "deep",
+      "properties": {
+        "ok": 1,
+        "nested": { "a": { "b": 1 } },
+        "too_deep": { "a": { "b": { "c": 1 } } }
+      }
+    },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$uuid4",
+              "event": "deep",
+              "properties": { "ok": 1, "nested": { "a": { "b": 1 } } },
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    { "do": "expectNoRequest" }
+  ]
+}

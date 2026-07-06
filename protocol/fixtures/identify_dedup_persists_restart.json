@@ -1,0 +1,48 @@
+{
+  "name": "identify_dedup_persists_restart",
+  "description": "The identify dedup set and the identified user_id both survive a process restart: re-identifying the same pair sends nothing, and new events still carry the persisted user_id.",
+  "steps": [
+    { "do": "init", "apiKey": "pk_fixture", "options": {} },
+    { "do": "identify", "userId": "u_1" },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/identify",
+        "body": {
+          "anonymous_id": "$capture:anon:uuid4",
+          "user_id": "u_1",
+          "idempotency_key": "$identifyKey"
+        }
+      },
+      "respond": { "status": 200, "body": { "status": "ok", "canonical_user_id": "c-1" } }
+    },
+    { "do": "expectNoRequest" },
+    { "do": "restart" },
+    { "do": "identify", "userId": "u_1" },
+    { "do": "track", "event": "after_restart", "properties": {} },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$same:anon",
+              "user_id": "u_1",
+              "event": "after_restart",
+              "properties": {},
+              "idempotency_key": "$eventKey",
+              "timestamp": "$isoTimestamp"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    { "do": "expectNoRequest" }
+  ]
+}

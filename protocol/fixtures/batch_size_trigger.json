@@ -1,0 +1,22 @@
+{
+  "name": "batch_size_trigger",
+  "description": "The 20th queued event triggers an automatic flush of all 20 events, in order, without an explicit flush() call.",
+  "steps": [
+    { "do": "init", "apiKey": "pk_fixture", "options": {} },
+    { "do": "trackMany", "count": 19, "event": "step", "indexProperty": "i" },
+    { "do": "expectNoRequest" },
+    { "do": "track", "event": "step", "properties": { "i": 19 } },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": { "$seq": { "event": "step", "indexProperty": "i", "start": 0, "count": 20 } },
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    { "do": "expectNoRequest" }
+  ]
+}

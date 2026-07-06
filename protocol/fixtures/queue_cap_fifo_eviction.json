@@ -1,0 +1,21 @@
+{
+  "name": "queue_cap_fifo_eviction",
+  "description": "When the queue cap is reached, the oldest events are evicted FIFO (with a debug warning, without crashing) and the survivors flush in order.",
+  "steps": [
+    { "do": "init", "apiKey": "pk_fixture", "options": { "maxQueueEvents": 5, "flushAt": 1000, "flushIntervalMs": 3600000 } },
+    { "do": "trackMany", "count": 8, "event": "cap", "indexProperty": "i" },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": { "$seq": { "event": "cap", "indexProperty": "i", "start": 3, "count": 5 } },
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    { "do": "expectNoRequest" }
+  ]
+}

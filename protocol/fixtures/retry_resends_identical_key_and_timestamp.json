@@ -1,0 +1,93 @@
+{
+  "name": "retry_resends_identical_key_and_timestamp",
+  "description": "The core idempotency invariant: across a network error, a 500 and a 429, every retry resends byte-identical idempotency_key AND timestamp, after the correct backoff.",
+  "steps": [
+    { "do": "init", "apiKey": "pk_fixture", "options": { "flushIntervalMs": 3600000 } },
+    { "do": "track", "event": "purchase", "properties": { "sku": "a" } },
+    { "do": "flush" },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$capture:anon:uuid4",
+              "event": "purchase",
+              "properties": { "sku": "a" },
+              "idempotency_key": "$capture:key:eventKey",
+              "timestamp": "$capture:ts:isoTimestamp"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "networkError": true }
+    },
+    { "do": "advance", "ms": 1300 },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$same:anon",
+              "event": "purchase",
+              "properties": { "sku": "a" },
+              "idempotency_key": "$same:key",
+              "timestamp": "$same:ts"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 500, "body": { "error": "internal" } }
+    },
+    { "do": "advance", "ms": 2500 },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$same:anon",
+              "event": "purchase",
+              "properties": { "sku": "a" },
+              "idempotency_key": "$same:key",
+              "timestamp": "$same:ts"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 429, "body": { "error": "rate_limited" } }
+    },
+    { "do": "advance", "ms": 4900 },
+    {
+      "do": "expectRequest",
+      "request": {
+        "path": "/v1/batch",
+        "body": {
+          "batch": [
+            {
+              "type": "track",
+              "anonymous_id": "$same:anon",
+              "event": "purchase",
+              "properties": { "sku": "a" },
+              "idempotency_key": "$same:key",
+              "timestamp": "$same:ts"
+            }
+          ],
+          "context": { "sdk": { "name": "$string", "version": "$string" } }
+        }
+      },
+      "respond": { "status": 200, "body": { "accepted": "$allKeys", "rejected": [] } }
+    },
+    { "do": "expectNoRequest" }
+  ]
+}

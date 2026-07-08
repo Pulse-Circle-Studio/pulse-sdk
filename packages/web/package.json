@@ -1,5 +1,5 @@
 {
-  "name": "@pulse/web",
+  "name": "@pulse-circle/web",
   "version": "0.1.0",
   "description": "Pulse analytics for the browser: a ≤10 KB, zero-dependency SDK with a persistent offline queue, idempotent delivery, and identity. Add analytics to your web app in two lines.",
   "license": "MIT",
@@ -42,7 +42,7 @@
     }
   ],
   "devDependencies": {
-    "@pulse/core": "0.1.0",
+    "@pulse-circle/core": "0.1.0",
     "@size-limit/preset-small-lib": "^11.1.6",
     "size-limit": "^11.1.6"
   },

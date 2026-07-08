@@ -1,5 +1,5 @@
 {
-  "name": "@pulse/react-native",
+  "name": "@pulse-circle/react-native",
   "version": "0.1.0",
   "description": "Pulse analytics for React Native and Expo: pure JS (no native modules), persistent offline queue over AsyncStorage, idempotent delivery, identity.",
   "license": "MIT",
@@ -24,7 +24,7 @@
     "build": "tsup src/index.ts --format cjs --dts --clean --sourcemap"
   },
   "dependencies": {
-    "@pulse/core": "0.1.0"
+    "@pulse-circle/core": "0.1.0"
   },
   "peerDependencies": {
     "@react-native-async-storage/async-storage": ">=1.17.0",

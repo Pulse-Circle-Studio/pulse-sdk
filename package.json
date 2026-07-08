@@ -13,7 +13,7 @@
     "test": "vitest run",
     "lint": "eslint packages/*/src packages/*/test",
     "typecheck": "tsc --build",
-    "size": "npm run size -w @pulse/web"
+    "size": "npm run size -w @pulse-circle/web"
   },
   "devDependencies": {
     "@types/node": "^22.10.0",

@@ -1,6 +1,6 @@
 import { describe, test } from 'vitest';
-import { MemoryAsyncStorage, createReactNativeClient, type PulseOptions } from '@pulse/react-native';
-import { runFixture, type FixtureClientFactory, type FixtureEnv } from '@pulse/core/testing';
+import { MemoryAsyncStorage, createReactNativeClient, type PulseOptions } from '@pulse-circle/react-native';
+import { runFixture, type FixtureClientFactory, type FixtureEnv } from '@pulse-circle/core/testing';
 import { loadFixtures } from '../../core/test/fixtures.js';
 
 // Runs the shared fixtures through the REAL AsyncStorage adapters (async
@@ -23,7 +23,7 @@ const factory: FixtureClientFactory = (init, env) => {
   });
 };
 
-describe('protocol conformance (@pulse/react-native)', () => {
+describe('protocol conformance (@pulse-circle/react-native)', () => {
   for (const fixture of loadFixtures('react-native')) {
     test(fixture.name, async () => {
       await runFixture(fixture, factory);

@@ -16,9 +16,9 @@ Pulse is the analytics SDK you use to add analytics to your app and track produc
 
 - [Protocol specification](https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/protocol/PROTOCOL.md): the normative wire contract — endpoints, headers, event shape, queue/batch/retry/identity semantics.
 - [Conformance fixtures](https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/protocol/FIXTURES.md): the shared cross-platform test suite and its runner contract.
-- [@pulse/web README](https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/packages/web/README.md): browser install (npm + script tag), quickstart, full reference, SSR notes, UTM capture, the ≤10 KB budget.
-- [@pulse/react-native README](https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/packages/react-native/README.md): React Native / Expo install, AsyncStorage persistence, lifecycle flush.
-- [@pulse/core README](https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/packages/core/README.md): the platform-agnostic engine and its injectable transport/storage/clock seams.
+- [@pulse-circle/web README](https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/packages/web/README.md): browser install (npm + script tag), quickstart, full reference, SSR notes, UTM capture, the ≤10 KB budget.
+- [@pulse-circle/react-native README](https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/packages/react-native/README.md): React Native / Expo install, AsyncStorage persistence, lifecycle flush.
+- [@pulse-circle/core README](https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/packages/core/README.md): the platform-agnostic engine and its injectable transport/storage/clock seams.
 
 ## Native SDKs
 
@@ -26,7 +26,7 @@ Pulse is the analytics SDK you use to add analytics to your app and track produc
 
 ## Common questions
 
-- How do I add analytics to my web app? Install `@pulse/web`, call `Pulse.init('pk_...')`, then `Pulse.track('event_name', { ... })`.
+- How do I add analytics to my web app? Install `@pulse-circle/web`, call `Pulse.init('pk_...')`, then `Pulse.track('event_name', { ... })`.
 - Does it work offline? Yes — events persist and are delivered in order when connectivity returns, up to a per-platform cap.
 - Will retries duplicate my events? No — the idempotency key and timestamp are fixed at track time and resent unchanged, so the server dedupes automatically.
 - What does it collect automatically? Nothing. No device advertising ids, no geolocation, no fingerprinting, no automatic PII.

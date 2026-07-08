@@ -1,4 +1,4 @@
-# @pulse/react-native
+# @pulse-circle/react-native
 
 Add analytics to your React Native or Expo app. A reliable, offline-first
 event queue and identity — **pure JavaScript, no native modules**, so
@@ -14,7 +14,7 @@ installation is just an `npm install` and it works in Expo Go.
 ## Install
 
 ```bash
-npm install @pulse/react-native @react-native-async-storage/async-storage
+npm install @pulse-circle/react-native @react-native-async-storage/async-storage
 ```
 
 `@react-native-async-storage/async-storage` is a peer dependency (it's what
@@ -26,7 +26,7 @@ without it, the built-in retry backoff recovers on its own.
 ## Quickstart
 
 ```ts
-import { Pulse } from '@pulse/react-native';
+import { Pulse } from '@pulse-circle/react-native';
 
 Pulse.init('pk_your_api_key');
 
@@ -85,7 +85,7 @@ timer, and when the app backgrounds.
 ## Advanced: a scoped client
 
 ```ts
-import { createReactNativeClient } from '@pulse/react-native';
+import { createReactNativeClient } from '@pulse-circle/react-native';
 
 const client = createReactNativeClient('pk_...', { debug: true });
 client.track('event');

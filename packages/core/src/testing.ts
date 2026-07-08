@@ -1,6 +1,6 @@
 /**
  * Test doubles + the conformance fixture runner (protocol/FIXTURES.md).
- * Import from '@pulse/core/testing'. Not part of the runtime bundle.
+ * Import from '@pulse-circle/core/testing'. Not part of the runtime bundle.
  */
 import type {
   PulseCancellable,

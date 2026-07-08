@@ -1,6 +1,6 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
-import type { Fixture } from '@pulse/core/testing';
+import type { Fixture } from '@pulse-circle/core/testing';
 
 const FIXTURES_DIR = path.resolve(import.meta.dirname, '../../../protocol/fixtures');
 

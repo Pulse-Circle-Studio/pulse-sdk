@@ -1,4 +1,4 @@
-# @pulse/web
+# @pulse-circle/web
 
 Add analytics to your web app in two lines. A reliable, offline-first event
 queue and identity for the browser — **≤ 10 KB gzipped, zero dependencies**.
@@ -13,19 +13,19 @@ queue and identity for the browser — **≤ 10 KB gzipped, zero dependencies**.
 ## Install
 
 ```bash
-npm install @pulse/web
+npm install @pulse-circle/web
 ```
 
 Or drop in a script tag — the bundle exposes a global `Pulse`:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@pulse/web/dist/pulse.iife.global.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@pulse-circle/web/dist/pulse.iife.global.js"></script>
 ```
 
 ## Quickstart
 
 ```ts
-import { Pulse } from '@pulse/web';
+import { Pulse } from '@pulse-circle/web';
 
 Pulse.init('pk_your_api_key');
 
@@ -96,7 +96,7 @@ moment. You rarely need this — the SDK also flushes on a size trigger
 
 ## UTM capture
 
-On the first page load of a session, `@pulse/web` reads `utm_source`,
+On the first page load of a session, `@pulse-circle/web` reads `utm_source`,
 `utm_medium`, `utm_campaign`, `utm_content`, and `utm_term` from the URL and
 attaches them to the first batch as attribution context — once per session,
 nothing more.
@@ -107,7 +107,7 @@ nothing more.
 full control over storage/transport in tests), use `createWebClient`:
 
 ```ts
-import { createWebClient } from '@pulse/web';
+import { createWebClient } from '@pulse-circle/web';
 
 const client = createWebClient('pk_...', { debug: true });
 client.track('event');

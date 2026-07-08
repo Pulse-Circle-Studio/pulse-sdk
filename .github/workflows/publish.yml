@@ -33,9 +33,9 @@ jobs:
         run: |
           tag="${GITHUB_REF_NAME}"
           case "$tag" in
-            core-v*)         echo "workspace=@pulse/core" >> "$GITHUB_OUTPUT" ;;
-            web-v*)          echo "workspace=@pulse/web" >> "$GITHUB_OUTPUT" ;;
-            react-native-v*) echo "workspace=@pulse/react-native" >> "$GITHUB_OUTPUT" ;;
+            core-v*)         echo "workspace=@pulse-circle/core" >> "$GITHUB_OUTPUT" ;;
+            web-v*)          echo "workspace=@pulse-circle/web" >> "$GITHUB_OUTPUT" ;;
+            react-native-v*) echo "workspace=@pulse-circle/react-native" >> "$GITHUB_OUTPUT" ;;
             *) echo "Unrecognized tag $tag" && exit 1 ;;
           esac
           echo "version=${tag##*-v}" >> "$GITHUB_OUTPUT"
@@ -51,7 +51,7 @@ jobs:
         run: |
           npm test
           npm run build
-          npm run size -w @pulse/web
+          npm run size -w @pulse-circle/web
 
       - name: Publish to npm
         run: npm publish -w ${{ steps.pkg.outputs.workspace }} --provenance --access public

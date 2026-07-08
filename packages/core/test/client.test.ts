@@ -10,14 +10,14 @@ import {
   uuid4,
   type PulseClientConfig,
   type PulseLogger,
-} from '@pulse/core';
+} from '@pulse-circle/core';
 import {
   InMemoryKeyValueStorage,
   InMemoryQueueStorage,
   MockTransport,
   VirtualClock,
   settle,
-} from '@pulse/core/testing';
+} from '@pulse-circle/core/testing';
 
 function makeClient(overrides: Partial<PulseClientConfig> = {}) {
   const transport = new MockTransport();

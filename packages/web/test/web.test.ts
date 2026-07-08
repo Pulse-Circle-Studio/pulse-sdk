@@ -1,12 +1,12 @@
 import { describe, expect, test } from 'vitest';
-import { Pulse, createWebClient, type PulseOptions } from '@pulse/web';
+import { Pulse, createWebClient, type PulseOptions } from '@pulse-circle/web';
 import {
   InMemoryKeyValueStorage,
   InMemoryQueueStorage,
   MockTransport,
   VirtualClock,
   settle,
-} from '@pulse/core/testing';
+} from '@pulse-circle/core/testing';
 
 describe('SSR safety', () => {
   test('importing and calling the API without window is a no-op', () => {

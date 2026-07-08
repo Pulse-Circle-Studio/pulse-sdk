@@ -1,4 +1,4 @@
-# @pulse/core
+# @pulse-circle/core
 
 The platform-agnostic engine behind the Pulse SDKs. It implements the
 [Pulse wire protocol](https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/protocol/PROTOCOL.md)
@@ -6,15 +6,15 @@ The platform-agnostic engine behind the Pulse SDKs. It implements the
 lifecycle — with **no DOM and no React Native APIs**. Everything
 platform-specific (storage, transport, clock) is injected.
 
-Most apps should install [`@pulse/web`](https://www.npmjs.com/package/@pulse/web)
-or [`@pulse/react-native`](https://www.npmjs.com/package/@pulse/react-native)
-instead. Use `@pulse/core` directly only when porting Pulse to a new
+Most apps should install [`@pulse-circle/web`](https://www.npmjs.com/package/@pulse-circle/web)
+or [`@pulse-circle/react-native`](https://www.npmjs.com/package/@pulse-circle/react-native)
+instead. Use `@pulse-circle/core` directly only when porting Pulse to a new
 JavaScript runtime.
 
 ## Install
 
 ```bash
-npm install @pulse/core
+npm install @pulse-circle/core
 ```
 
 ## What it does
@@ -22,7 +22,7 @@ npm install @pulse/core
 `PulseClient` owns the whole protocol state machine. You give it four seams:
 
 ```ts
-import { PulseClient, DEFAULT_ENDPOINT, SDK_VERSION } from '@pulse/core';
+import { PulseClient, DEFAULT_ENDPOINT, SDK_VERSION } from '@pulse-circle/core';
 
 const client = new PulseClient({
   apiKey: 'pk_...',
@@ -51,7 +51,7 @@ test — no real timers, no real network.
 
 ## Testing utilities
 
-`@pulse/core/testing` ships the test doubles and the **conformance fixture
+`@pulse-circle/core/testing` ships the test doubles and the **conformance fixture
 runner** used by every platform:
 
 ```ts
@@ -61,7 +61,7 @@ import {
   InMemoryKeyValueStorage,
   InMemoryQueueStorage,
   runFixture,
-} from '@pulse/core/testing';
+} from '@pulse-circle/core/testing';
 ```
 
 `runFixture(fixture, createClient)` drives a client through a protocol

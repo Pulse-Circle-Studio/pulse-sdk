@@ -1,4 +1,4 @@
-import type { PulseKeyValueStorage, PulseQueueStorage } from '@pulse/core';
+import type { PulseKeyValueStorage, PulseQueueStorage } from '@pulse-circle/core';
 
 /** The subset of @react-native-async-storage/async-storage we use. */
 export interface AsyncStorageLike {

@@ -7,7 +7,7 @@ import {
   type PulseOptions,
   type PulseProperties,
   type PulseTransport,
-} from '@pulse/core';
+} from '@pulse-circle/core';
 import {
   AsyncKeyValueStorage,
   AsyncQueueStorage,

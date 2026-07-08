@@ -1,4 +1,4 @@
-import type { PulseKeyValueStorage } from '@pulse/core';
+import type { PulseKeyValueStorage } from '@pulse-circle/core';
 
 const UTM_KEYS = ['source', 'medium', 'campaign', 'content', 'term'] as const;
 const K_PENDING = 'pulse_utm_pending';

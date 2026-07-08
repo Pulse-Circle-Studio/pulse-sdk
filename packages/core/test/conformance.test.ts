@@ -1,6 +1,6 @@
 import { describe, test } from 'vitest';
-import { DEFAULT_ENDPOINT, PulseClient, SDK_VERSION, type PulseOptions } from '@pulse/core';
-import { runFixture, type FixtureClientFactory } from '@pulse/core/testing';
+import { DEFAULT_ENDPOINT, PulseClient, SDK_VERSION, type PulseOptions } from '@pulse-circle/core';
+import { runFixture, type FixtureClientFactory } from '@pulse-circle/core/testing';
 import { loadFixtures } from './fixtures.js';
 
 // The core client with mobile-like defaults; platform packages run their own
@@ -24,7 +24,7 @@ const factory: FixtureClientFactory = (init, env) =>
     random: () => 0.5, // deterministic mid-range jitter
   });
 
-describe('protocol conformance (@pulse/core)', () => {
+describe('protocol conformance (@pulse-circle/core)', () => {
   for (const fixture of loadFixtures(null)) {
     test(fixture.name, async () => {
       await runFixture(fixture, factory);

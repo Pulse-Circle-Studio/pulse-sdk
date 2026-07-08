@@ -9,7 +9,7 @@ import {
   type PulseProperties,
   type PulseQueueStorage,
   type PulseTransport,
-} from '@pulse/core';
+} from '@pulse-circle/core';
 import { BrowserKeyValueStorage, BrowserQueueStorage } from './storage.js';
 import { captureUtmOnce, utmContextExtras, type SessionFlagStore } from './utm.js';
 

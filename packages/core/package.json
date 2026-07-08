@@ -1,5 +1,5 @@
 {
-  "name": "@pulse/core",
+  "name": "@pulse-circle/core",
   "version": "0.1.0",
   "description": "Platform-agnostic core for Pulse analytics SDKs: persistent ordered event queue, idempotent delivery, identity. No DOM or React Native APIs.",
   "license": "MIT",

@@ -3,8 +3,8 @@ import {
   AsyncQueueStorage,
   MemoryAsyncStorage,
   createReactNativeClient,
-} from '@pulse/react-native';
-import { MockTransport, VirtualClock, settle } from '@pulse/core/testing';
+} from '@pulse-circle/react-native';
+import { MockTransport, VirtualClock, settle } from '@pulse-circle/core/testing';
 
 describe('lifecycle hooks', () => {
   test('backgrounding the app triggers a best-effort flush', async () => {

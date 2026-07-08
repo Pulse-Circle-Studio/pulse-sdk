@@ -22,18 +22,18 @@ in [`pulse-sdk-native`](https://github.com/Pulse-Circle-Studio/pulse-sdk-native)
 
 | Package | What it's for | Install |
 |---|---|---|
-| [`@pulse/web`](./packages/web) | Browser / any web app | `npm i @pulse/web` |
-| [`@pulse/react-native`](./packages/react-native) | React Native & Expo | `npm i @pulse/react-native` |
-| [`@pulse/core`](./packages/core) | Platform-agnostic engine (used by the above) | `npm i @pulse/core` |
+| [`@pulse-circle/web`](./packages/web) | Browser / any web app | `npm i @pulse-circle/web` |
+| [`@pulse-circle/react-native`](./packages/react-native) | React Native & Expo | `npm i @pulse-circle/react-native` |
+| [`@pulse-circle/core`](./packages/core) | Platform-agnostic engine (used by the above) | `npm i @pulse-circle/core` |
 
 ## Quickstart (web)
 
 ```bash
-npm install @pulse/web
+npm install @pulse-circle/web
 ```
 
 ```ts
-import { Pulse } from '@pulse/web';
+import { Pulse } from '@pulse-circle/web';
 
 Pulse.init('pk_your_api_key');
 
@@ -91,7 +91,7 @@ npm test          # conformance fixtures + unit tests (vitest)
 npm run lint
 npm run typecheck
 npm run build     # tsup builds for every package
-npm run size -w @pulse/web   # enforce the 10 KB budget
+npm run size -w @pulse-circle/web   # enforce the 10 KB budget
 ```
 
 ### Conformance fixtures

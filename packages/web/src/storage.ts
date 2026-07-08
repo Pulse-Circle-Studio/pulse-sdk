@@ -1,4 +1,4 @@
-import type { PulseKeyValueStorage, PulseQueueStorage } from '@pulse/core';
+import type { PulseKeyValueStorage, PulseQueueStorage } from '@pulse-circle/core';
 
 /** localStorage-backed KV with graceful fallback (private mode, quota). */
 export class BrowserKeyValueStorage implements PulseKeyValueStorage {

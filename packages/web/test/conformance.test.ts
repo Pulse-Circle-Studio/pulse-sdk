@@ -1,6 +1,6 @@
 import { describe, test } from 'vitest';
-import { createWebClient, type PulseOptions } from '@pulse/web';
-import { runFixture, type FixtureClientFactory, type FixtureEnv } from '@pulse/core/testing';
+import { createWebClient, type PulseOptions } from '@pulse-circle/web';
+import { runFixture, type FixtureClientFactory, type FixtureEnv } from '@pulse-circle/core/testing';
 import { loadFixtures } from '../../core/test/fixtures.js';
 
 // sessionStorage outlives a page reload (fixture "restart") but not a fixture.
@@ -23,7 +23,7 @@ const factory: FixtureClientFactory = (init, env) => {
   });
 };
 
-describe('protocol conformance (@pulse/web)', () => {
+describe('protocol conformance (@pulse-circle/web)', () => {
   for (const fixture of loadFixtures('web')) {
     test(fixture.name, async () => {
       await runFixture(fixture, factory);

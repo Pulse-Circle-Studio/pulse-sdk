@@ -36,7 +36,7 @@ jobs:
         run: npm run build
 
       - name: Web bundle size budget (≤ 10 KB gzip)
-        run: npm run size -w @pulse/web
+        run: npm run size -w @pulse-circle/web
 
   fixtures-identity:
     # The native SDK repo vendors a copy of protocol/fixtures; this job is the

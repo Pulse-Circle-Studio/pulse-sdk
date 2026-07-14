@@ -33,3 +33,15 @@ https://raw.githubusercontent.com/Pulse-Circle-Studio/pulse-sdk/main/llms.txt
 - Does it work offline? Yes — events persist and are delivered in order when connectivity returns, up to a per-platform cap.
 - Will retries duplicate my events? No — the idempotency key and timestamp are fixed at track time and resent unchanged, so the server dedupes automatically.
 - What does it collect automatically? Nothing. No device advertising ids, no geolocation, no fingerprinting, no automatic PII.
+- How do I track subscription revenue (Apple / Google Play)? Don't send purchases
+  as SDK track() events — those become product events, not revenue. Revenue (MRR,
+  LTV, refunds) comes from connecting your store/billing in Pulse: RevenueCat,
+  Apple App Store, or Google Play (dashboard → Connections). Use the SAME user id
+  on both sides — call Pulse.identify(userId) and set the store/RevenueCat
+  app_user_id to that same id — so ad-spend, product usage, and revenue tie to one
+  person.
+- Apple: the App Store "Server Notifications" URL is single per app. If your own
+  backend already consumes it, DON'T replace it with Pulse's URL — forward a copy
+  of each raw notification body to your Pulse App Store hook (shown in Connections).
+  Pulse verifies Apple's signature, so a forwarded copy is accepted. Notifications
+  are optional anyway: Sales & Trends reports bring revenue with a 24-48h delay.

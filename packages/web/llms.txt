@@ -30,4 +30,15 @@ Script tag (global `Pulse`):
 - First-visit UTM params attached automatically.
 - Get an API key: create an app at https://app.pulse.pulsecircle.studio
 
+## Subscriptions & revenue
+- This SDK sends product events, NOT revenue. Don't send purchases as track()
+  calls — they become product events, not MRR/LTV/refunds.
+- Revenue comes from connecting billing in Pulse (RevenueCat / Apple App Store /
+  Google Play, dashboard → Connections). Use the same user id on both sides:
+  Pulse.identify(userId) and the store/RevenueCat app_user_id.
+- Apple: the App Store Server Notifications URL is single per app. If your
+  backend already uses it, forward a copy of the raw notification body to your
+  Pulse App Store hook instead of replacing your URL — Pulse verifies Apple's
+  signature, so a forwarded copy is accepted.
+
 Full docs: https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/packages/web/README.md

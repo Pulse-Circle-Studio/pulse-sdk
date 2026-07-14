@@ -82,6 +82,17 @@ timer, and when the app backgrounds.
 - Failed batches retry with exponential backoff and jitter; a persistently
   rejected batch is set aside after 10 attempts so it never blocks the queue.
 
+## Subscriptions & revenue
+
+This SDK sends product events, not revenue. To get MRR / LTV / refunds, connect
+your billing in Pulse (RevenueCat, Apple App Store, or Google Play) — don't send
+purchases as `track()` calls. Keep the user id consistent: `Pulse.identify(userId)`
+on the client and the same id as your store/RevenueCat `app_user_id`.
+
+Apple note: App Store Server Notifications allow one URL per app. If your backend
+already uses it, forward a copy of the raw notification body to your Pulse App
+Store hook instead of replacing your URL (Pulse verifies Apple's signature).
+
 ## Advanced: a scoped client
 
 ```ts

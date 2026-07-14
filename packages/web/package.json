@@ -1,6 +1,6 @@
 {
   "name": "@pulse-circle/web",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Pulse analytics for the browser: a ≤10 KB, zero-dependency SDK with a persistent offline queue, idempotent delivery, and identity. Add analytics to your web app in two lines.",
   "license": "MIT",
   "repository": {
@@ -9,7 +9,15 @@
     "directory": "packages/web"
   },
   "homepage": "https://github.com/Pulse-Circle-Studio/pulse-sdk/tree/main/packages/web#readme",
-  "keywords": ["analytics", "web analytics", "events", "tracking", "pulse", "offline-first", "utm"],
+  "keywords": [
+    "analytics",
+    "web analytics",
+    "events",
+    "tracking",
+    "pulse",
+    "offline-first",
+    "utm"
+  ],
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.cjs",
@@ -24,7 +32,11 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["dist", "README.md", "llms.txt"],
+  "files": [
+    "dist",
+    "README.md",
+    "llms.txt"
+  ],
   "scripts": {
     "build": "tsup",
     "size": "size-limit"
@@ -46,6 +58,10 @@
     "@size-limit/preset-small-lib": "^11.1.6",
     "size-limit": "^11.1.6"
   },
-  "engines": { "node": ">=18" },
-  "publishConfig": { "access": "public" }
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

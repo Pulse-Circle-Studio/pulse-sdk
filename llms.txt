@@ -40,8 +40,11 @@ https://raw.githubusercontent.com/Pulse-Circle-Studio/pulse-sdk/main/llms.txt
   on both sides — call Pulse.identify(userId) and set the store/RevenueCat
   app_user_id to that same id — so ad-spend, product usage, and revenue tie to one
   person.
-- Apple: the App Store "Server Notifications" URL is single per app. If your own
-  backend already consumes it, DON'T replace it with Pulse's URL — forward a copy
-  of each raw notification body to your Pulse App Store hook (shown in Connections).
-  Pulse verifies Apple's signature, so a forwarded copy is accepted. Notifications
-  are optional anyway: Sales & Trends reports bring revenue with a 24-48h delay.
+- Apple subscription revenue (MRR/LTV): connect Apple App Store in Pulse
+  (Issuer/Key/.p8 + Bundle ID + Vendor Number). Revenue/MRR/LTV come from App
+  Store Server Notifications v2. Apple allows ONE notifications URL per app, so
+  if your backend already consumes it, DON'T replace it — forward a copy of the
+  raw { signedPayload } body to your Pulse App Store hook (shown in Connections).
+  Pulse re-verifies Apple's signature, so a forwarded copy is accepted. Do the
+  same from your sandbox handler. Sales & Trends reports alone give store-level
+  revenue (24-48h delay) but not per-subscription MRR/LTV.

@@ -89,9 +89,27 @@ your billing in Pulse (RevenueCat, Apple App Store, or Google Play) — don't se
 purchases as `track()` calls. Keep the user id consistent: `Pulse.identify(userId)`
 on the client and the same id as your store/RevenueCat `app_user_id`.
 
-Apple note: App Store Server Notifications allow one URL per app. If your backend
-already uses it, forward a copy of the raw notification body to your Pulse App
-Store hook instead of replacing your URL (Pulse verifies Apple's signature).
+### Apple App Store subscriptions
+
+Revenue, MRR and LTV for App Store come from **Server Notifications v2**, which
+Pulse ingests through its App Store hook. Apple allows only one notifications URL
+per app — if your backend already consumes it, forward a copy (don't replace):
+
+```js
+// Apple → your backend → Pulse. Forward the raw { signedPayload } body.
+app.post('/your/app-store/notifications', (req, res) => {
+  res.sendStatus(200);               // ack Apple first
+  fetch('https://hooks.pulse.pulsecircle.studio/hooks/app-store/YOUR_CONNECTION_ID', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify(req.body),  // the { signedPayload } Apple sent
+  }).catch(() => {});                // Pulse re-verifies Apple's signature
+});
+```
+
+Do the same from your sandbox handler (same URL). Get `YOUR_CONNECTION_ID` from
+the App Store card in Pulse → Connections. Sales & Trends reports alone give
+store-level revenue with a 24–48h delay but not per-subscription MRR/LTV.
 
 ## Advanced: a scoped client
 

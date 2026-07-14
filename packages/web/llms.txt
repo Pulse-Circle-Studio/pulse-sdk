@@ -1,0 +1,33 @@
+# @pulse-circle/web
+
+> Browser analytics SDK for Pulse: a ~10 KB gzip, zero-dependency, offline-first
+> event queue with idempotent delivery and identity. Sends events to
+> https://api.pulse.pulsecircle.studio by default (no config needed).
+
+## Install
+
+    npm i @pulse-circle/web
+
+    import { Pulse } from '@pulse-circle/web';
+    Pulse.init('pk_your_api_key');   // publishable client key from your Pulse app
+    Pulse.track('signup_completed', { plan: 'pro' });
+    Pulse.identify('user_42');       // after login
+    Pulse.reset();                   // on logout
+
+Script tag (global `Pulse`):
+    <script src="https://cdn.jsdelivr.net/npm/@pulse-circle/web/dist/pulse.iife.global.js"></script>
+
+## API
+- init(apiKey, options?) — options: endpoint, flushIntervalMs, debug
+- track(event, properties?) — flat props, nested up to 2 levels
+- identify(userId) — link anon id to a known user
+- reset() — new anonymous id (logout)
+- flush() — force-send now
+
+## Notes
+- Auto-captures nothing (no fingerprinting, no auto page views).
+- Persists across reloads, retries with backoff, dedupes by idempotency key.
+- First-visit UTM params attached automatically.
+- Get an API key: create an app at https://app.pulse.pulsecircle.studio
+
+Full docs: https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/packages/web/README.md

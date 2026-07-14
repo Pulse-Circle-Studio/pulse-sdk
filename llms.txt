@@ -14,6 +14,9 @@ Pulse is the analytics SDK you use to add analytics to your app and track produc
 
 ## Docs
 
+Agent-readable guide (reachable behind sandbox allow-lists):
+https://raw.githubusercontent.com/Pulse-Circle-Studio/pulse-sdk/main/llms.txt
+
 - [Protocol specification](https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/protocol/PROTOCOL.md): the normative wire contract — endpoints, headers, event shape, queue/batch/retry/identity semantics.
 - [Conformance fixtures](https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/protocol/FIXTURES.md): the shared cross-platform test suite and its runner contract.
 - [@pulse-circle/web README](https://github.com/Pulse-Circle-Studio/pulse-sdk/blob/main/packages/web/README.md): browser install (npm + script tag), quickstart, full reference, SSR notes, UTM capture, the ≤10 KB budget.

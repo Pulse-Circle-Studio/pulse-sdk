@@ -30,8 +30,27 @@ CI does the verification and the publish.
    matches `package.json`, re-runs tests + build + size gate, and runs
    `npm publish --provenance` for that workspace.
 
-## Secrets
+## Authentication — Trusted Publishing (no token)
 
-`NPM_TOKEN` (an npm automation token with publish rights to the `@pulse-circle`
-scope) must be set in the repository's GitHub Actions secrets. Provenance uses
-the workflow's OIDC identity — no extra key needed.
+Publishing uses **npm Trusted Publishing over OIDC** — there is no `NPM_TOKEN`
+secret to manage. The `publish.yml` job requests an `id-token` and npm
+(≥ 11.5.1) exchanges it for a short-lived, scoped publish credential; provenance
+is generated automatically.
+
+One-time setup, per package, on npmjs.com → the package's **Settings → Trusted
+Publisher**:
+
+| Field | Value |
+|---|---|
+| Provider | GitHub Actions |
+| Organization / repository | `Pulse-Circle-Studio/pulse-sdk` |
+| Workflow filename | `publish.yml` |
+
+The package must exist before you can attach a trusted publisher, so the very
+first release of a brand-new package is the one exception: publish `0.1.0` once
+with a temporary [granular access token](https://docs.npmjs.com/creating-and-viewing-access-tokens)
+(or `npm publish` from a maintainer's machine), then configure the trusted
+publisher and drop the token. Every release after that is tokenless.
+
+Any stale `NPM_TOKEN` repository secret can be deleted once trusted publishing
+is configured.

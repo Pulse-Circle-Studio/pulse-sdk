@@ -10,6 +10,15 @@ queue and identity for the browser — **≤ 10 KB gzipped, zero dependencies**.
 - ESM, CommonJS, and a `<script>` global build. TypeScript types included.
   SSR-safe (a no-op when there's no `window`).
 
+## For AI agents
+Install: `npm i @pulse-circle/web`, then `Pulse.init('pk_...')` and
+`Pulse.track('event', {...})`. The package is self-contained (zero deps, default
+endpoint baked in) and ships llms.txt inside it. Installing needs only npm; event
+delivery happens in the end-user's browser at runtime.
+
+Agent-readable guide (reachable behind sandbox allow-lists):
+https://raw.githubusercontent.com/Pulse-Circle-Studio/pulse-sdk/main/llms.txt
+
 ## Install
 
 ```bash

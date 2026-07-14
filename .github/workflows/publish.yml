@@ -1,8 +1,16 @@
 name: Publish
 
-# Tag-triggered npm publish. Tag format: <package>-v<version>, e.g.
-#   core-v0.1.0 | web-v0.1.0 | react-native-v0.1.0
+# Tag-triggered npm publish via npm Trusted Publishing (OIDC) — no NPM_TOKEN.
+# Tag format: <package>-v<version>, e.g.
+#   core-v0.1.0 | web-v0.1.1 | react-native-v0.1.0
 # The tag prefix selects the workspace so platforms version independently.
+#
+# One-time setup on npmjs.com (per package, under Settings → Trusted Publisher):
+#   Provider  = GitHub Actions
+#   Org/repo  = Pulse-Circle-Studio/pulse-sdk
+#   Workflow  = publish.yml
+# After that, publishes from this workflow authenticate over OIDC and generate
+# provenance automatically — there is no long-lived token to leak or rotate.
 on:
   push:
     tags:
@@ -15,7 +23,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write # npm provenance
+      id-token: write # required for OIDC trusted publishing + provenance
     steps:
       - uses: actions/checkout@v4
 
@@ -24,6 +32,9 @@ jobs:
           node-version: 22
           cache: npm
           registry-url: 'https://registry.npmjs.org'
+
+      - name: Upgrade npm (trusted publishing needs npm >= 11.5.1)
+        run: npm install -g npm@latest
 
       - name: Install
         run: npm ci
@@ -53,7 +64,7 @@ jobs:
           npm run build
           npm run size -w @pulse-circle/web
 
-      - name: Publish to npm
-        run: npm publish -w ${{ steps.pkg.outputs.workspace }} --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish to npm (OIDC trusted publishing)
+        # No NODE_AUTH_TOKEN: npm >= 11.5.1 mints a short-lived OIDC credential
+        # from the id-token permission above. Provenance is generated automatically.
+        run: npm publish -w ${{ steps.pkg.outputs.workspace }} --access public

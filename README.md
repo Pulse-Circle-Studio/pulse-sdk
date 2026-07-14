@@ -18,6 +18,12 @@ queue and clean identity — and nothing else.
 This repository holds the TypeScript packages. The Swift and Kotlin SDKs live
 in [`pulse-sdk-native`](https://github.com/Pulse-Circle-Studio/pulse-sdk-native).
 
+## For AI agents
+Install: `npm i @pulse-circle/web`, then `Pulse.init('pk_...')` and
+`Pulse.track('event', {...})`. The package is self-contained (zero deps, default
+endpoint baked in) and ships llms.txt inside it. Installing needs only npm; event
+delivery happens in the end-user's browser at runtime.
+
 ## Packages
 
 | Package | What it's for | Install |

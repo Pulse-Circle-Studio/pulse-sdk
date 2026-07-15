@@ -1,6 +1,6 @@
 {
   "name": "@pulse-circle/web",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Pulse analytics for the browser: a ≤10 KB, zero-dependency SDK with a persistent offline queue, idempotent delivery, and identity. Add analytics to your web app in two lines.",
   "license": "MIT",
   "repository": {

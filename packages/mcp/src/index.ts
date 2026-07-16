@@ -27,8 +27,22 @@ come from connecting your store/billing in Pulse (see pulse_connect).`,
   'react-native': `Raw ingestion API (RN SDK package pending):
   POST ${BASE}/v1/batch  Authorization: Bearer PULSE_API_KEY
   body { batch: [{ type:'track', anonymous_id, event, idempotency_key, timestamp }] }`,
-  swift: `POST ${BASE}/v1/batch with Authorization: Bearer PULSE_API_KEY; see docs.`,
-  kotlin: `POST ${BASE}/v1/batch with Authorization: Bearer PULSE_API_KEY; see docs.`,
+  swift: `Install PulseSDK for iOS (iOS 15+, Swift 5.9+, zero dependencies) via Swift Package Manager:
+  Xcode → Add Package → https://github.com/Pulse-Circle-Studio/pulse-sdk-native  (from: "0.1.0")
+  import PulseSDK
+  Pulse.initialize(apiKey: PULSE_API_KEY)   // pk_... publishable key
+  Pulse.track("app_open")
+  Pulse.identify(userId)                    // after login
+Full agent guide: https://raw.githubusercontent.com/Pulse-Circle-Studio/pulse-sdk-native/main/llms.txt
+NOTE: track() is for product events, not revenue. Subscription revenue/MRR/LTV
+come from connecting your store/billing in Pulse (see pulse_connect).`,
+  kotlin: `Android SDK (studio.pulsecircle.pulse:pulse-sdk-android on Maven Central) is pending
+its first publish — until then use the raw ingestion API:
+  POST ${BASE}/v1/batch  Authorization: Bearer PULSE_API_KEY
+  body { batch: [{ type:'track', anonymous_id, event, idempotency_key, timestamp }] }
+Full agent guide: https://raw.githubusercontent.com/Pulse-Circle-Studio/pulse-sdk-native/main/llms.txt
+NOTE: track() is for product events, not revenue. Subscription revenue/MRR/LTV
+come from connecting your store/billing in Pulse (see pulse_connect).`,
 };
 
 const CONNECT: Record<(typeof SOURCES)[number], string> = {

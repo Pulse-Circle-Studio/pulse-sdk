@@ -111,6 +111,17 @@ describe('@pulse-circle/mcp stdio server', () => {
     expect(text).toContain('idempotency_key');
   }, 15_000);
 
+  test('swift guide installs the native SDK via SPM; kotlin falls back to raw API', async () => {
+    const swift = await callTool('pulse_setup_guide', { platform: 'swift' });
+    expect(swift).toContain('https://github.com/Pulse-Circle-Studio/pulse-sdk-native');
+    expect(swift).toContain('Pulse.initialize(apiKey:');
+    expect(swift).toContain('llms.txt');
+
+    const kotlin = await callTool('pulse_setup_guide', { platform: 'kotlin' });
+    expect(kotlin).toContain('https://api.pulse.pulsecircle.studio/v1/batch');
+    expect(kotlin).toContain('Maven Central');
+  }, 15_000);
+
   test('app_store connect guide: Vendor Number required, forward-not-replace', async () => {
     const text = await callTool('pulse_connect', { source: 'app_store' });
     expect(text).toContain('Vendor Number');

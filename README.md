@@ -31,6 +31,7 @@ delivery happens in the end-user's browser at runtime.
 | [`@pulse-circle/web`](./packages/web) | Browser / any web app | `npm i @pulse-circle/web` |
 | [`@pulse-circle/react-native`](./packages/react-native) | React Native & Expo | `npm i @pulse-circle/react-native` |
 | [`@pulse-circle/core`](./packages/core) | Platform-agnostic engine (used by the above) | `npm i @pulse-circle/core` |
+| [`@pulse-circle/mcp`](./packages/mcp) | Local (stdio) MCP server — offline setup/connect guides for AI agents | `claude mcp add pulse -- npx -y @pulse-circle/mcp` |
 
 ## Quickstart (web)
 

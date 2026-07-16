@@ -2,7 +2,7 @@ name: Publish
 
 # Tag-triggered npm publish via npm Trusted Publishing (OIDC) — no NPM_TOKEN.
 # Tag format: <package>-v<version>, e.g.
-#   core-v0.1.0 | web-v0.1.1 | react-native-v0.1.0
+#   core-v0.1.0 | web-v0.1.1 | react-native-v0.1.0 | mcp-v0.1.0
 # The tag prefix selects the workspace so platforms version independently.
 #
 # One-time setup on npmjs.com (per package, under Settings → Trusted Publisher):
@@ -17,6 +17,7 @@ on:
       - 'core-v*'
       - 'web-v*'
       - 'react-native-v*'
+      - 'mcp-v*'
 
 jobs:
   publish:
@@ -47,6 +48,7 @@ jobs:
             core-v*)         echo "workspace=@pulse-circle/core" >> "$GITHUB_OUTPUT" ;;
             web-v*)          echo "workspace=@pulse-circle/web" >> "$GITHUB_OUTPUT" ;;
             react-native-v*) echo "workspace=@pulse-circle/react-native" >> "$GITHUB_OUTPUT" ;;
+            mcp-v*)          echo "workspace=@pulse-circle/mcp" >> "$GITHUB_OUTPUT" ;;
             *) echo "Unrecognized tag $tag" && exit 1 ;;
           esac
           echo "version=${tag##*-v}" >> "$GITHUB_OUTPUT"

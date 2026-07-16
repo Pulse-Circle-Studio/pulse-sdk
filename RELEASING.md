@@ -6,9 +6,11 @@ CI does the verification and the publish.
 ## Steps
 
 1. **Bump the version** in the target package's `package.json`
-   (`packages/core`, `packages/web`, or `packages/react-native`). Keep
-   `packages/core/src/version.ts` (`SDK_VERSION`) in sync — a unit test fails
-   if it drifts from `@pulse-circle/core`'s `package.json`.
+   (`packages/core`, `packages/web`, `packages/react-native`, or
+   `packages/mcp`). Keep `packages/core/src/version.ts` (`SDK_VERSION`) in
+   sync — a unit test fails if it drifts from `@pulse-circle/core`'s
+   `package.json`. Same for `packages/mcp`: the server version in
+   `src/index.ts` must match its `package.json` (guarded by the smoke test).
 
 2. **Land it on `main`** through a PR. CI must be green: lint, typecheck,
    conformance + unit tests, build, and the web size budget (≤ 10 KB gzip).
@@ -20,6 +22,7 @@ CI does the verification and the publish.
    | `@pulse-circle/core` | `core-v<version>` |
    | `@pulse-circle/web` | `web-v<version>` |
    | `@pulse-circle/react-native` | `react-native-v<version>` |
+   | `@pulse-circle/mcp` | `mcp-v<version>` |
 
    ```bash
    git tag web-v0.1.0

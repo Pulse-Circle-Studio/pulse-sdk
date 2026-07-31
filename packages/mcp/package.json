@@ -1,0 +1,41 @@
+{
+  "name": "@pulse-circle/mcp",
+  "version": "0.1.0",
+  "description": "Local (stdio) MCP server for Pulse: setup and connect guides for AI coding agents, offline.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Pulse-Circle-Studio/pulse-sdk.git",
+    "directory": "packages/mcp"
+  },
+  "homepage": "https://github.com/Pulse-Circle-Studio/pulse-sdk/tree/main/packages/mcp#readme",
+  "keywords": [
+    "pulse",
+    "analytics",
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "ai-agent"
+  ],
+  "type": "module",
+  "bin": {
+    "pulse-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --clean --target node18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "zod": "^3.23.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

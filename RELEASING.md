@@ -54,7 +54,8 @@ first release of a brand-new package is the one exception. Use the manual
 [first-release workflow](./.github/workflows/publish-first.yml):
 
 1. Create a [granular access token](https://docs.npmjs.com/creating-and-viewing-access-tokens)
-   on npmjs.com scoped to the new package only (Read and write, short expiry).
+   on npmjs.com with Read/Write on the `@pulse-circle` scope — a package that
+   doesn't exist yet can't be selected individually. Short expiry (7 days).
 2. Add it as the `NPM_TOKEN` repository secret.
 3. Actions → **Publish (first release, token)** → Run workflow → pick the
    workspace. It runs tests + build and publishes the version currently in

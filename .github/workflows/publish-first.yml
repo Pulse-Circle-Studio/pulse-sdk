@@ -1,0 +1,50 @@
+name: Publish (first release, token)
+
+# One-time bootstrap for a BRAND-NEW package. npm Trusted Publishing can only
+# be attached to a package that already exists on the registry, so the very
+# first version of a new workspace is published here with a short-lived
+# granular NPM_TOKEN (repository secret). After this workflow succeeds once:
+#   1. npmjs.com → the package → Settings → Trusted Publisher:
+#      GitHub Actions / Pulse-Circle-Studio/pulse-sdk / publish.yml
+#   2. Revoke the token on npmjs.com and delete the NPM_TOKEN repo secret.
+#   3. Do NOT push a <package>-v<this version> tag — the version is already
+#      on npm; tags take over from the NEXT version (see RELEASING.md).
+# Every release after that is tag-driven via publish.yml (OIDC, tokenless).
+on:
+  workflow_dispatch:
+    inputs:
+      workspace:
+        description: 'npm workspace to bootstrap (must not exist on npm yet)'
+        required: true
+        default: '@pulse-circle/mcp'
+        type: choice
+        options:
+          - '@pulse-circle/mcp'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # provenance attestation only; auth is the NPM_TOKEN
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install
+        run: npm ci
+
+      - name: Test & build
+        run: |
+          npm test
+          npm run build
+
+      - name: Publish to npm (token auth + provenance)
+        run: npm publish -w '${{ github.event.inputs.workspace }}' --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

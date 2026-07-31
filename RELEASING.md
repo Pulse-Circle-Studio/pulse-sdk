@@ -50,10 +50,22 @@ Publisher**:
 | Workflow filename | `publish.yml` |
 
 The package must exist before you can attach a trusted publisher, so the very
-first release of a brand-new package is the one exception: publish `0.1.0` once
-with a temporary [granular access token](https://docs.npmjs.com/creating-and-viewing-access-tokens)
-(or `npm publish` from a maintainer's machine), then configure the trusted
-publisher and drop the token. Every release after that is tokenless.
+first release of a brand-new package is the one exception. Use the manual
+[first-release workflow](./.github/workflows/publish-first.yml):
+
+1. Create a [granular access token](https://docs.npmjs.com/creating-and-viewing-access-tokens)
+   on npmjs.com scoped to the new package only (Read and write, short expiry).
+2. Add it as the `NPM_TOKEN` repository secret.
+3. Actions → **Publish (first release, token)** → Run workflow → pick the
+   workspace. It runs tests + build and publishes the version currently in
+   that workspace's `package.json`.
+4. Configure the trusted publisher (table above), then revoke the token on
+   npmjs.com and delete the `NPM_TOKEN` secret.
+5. Do **not** push a `<package>-v<first version>` tag afterwards — that
+   version is already on npm and the tag-driven publish would fail. Tags take
+   over from the next version.
+
+Every release after that is tokenless.
 
 Any stale `NPM_TOKEN` repository secret can be deleted once trusted publishing
 is configured.

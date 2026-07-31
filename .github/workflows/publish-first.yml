@@ -16,10 +16,13 @@ on:
       workspace:
         description: 'npm workspace to bootstrap (must not exist on npm yet)'
         required: true
-        default: '@pulse-circle/mcp'
+        default: '@pulse-circle/react-native'
         type: choice
         options:
-          - '@pulse-circle/mcp'
+          # Only workspaces with no first release yet — web and mcp are
+          # already on npm; drop entries here as they get bootstrapped.
+          - '@pulse-circle/react-native'
+          - '@pulse-circle/core'
 
 jobs:
   publish:

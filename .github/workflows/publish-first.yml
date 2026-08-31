@@ -19,6 +19,8 @@ on:
         default: '@pulse-circle/mcp'
         type: choice
         options:
+          - '@pulse-circle/core'
+          - '@pulse-circle/react-native'
           - '@pulse-circle/mcp'
 
 jobs:

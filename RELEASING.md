@@ -66,6 +66,13 @@ first release of a brand-new package is the one exception. Use the manual
    version is already on npm and the tag-driven publish would fail. Tags take
    over from the next version.
 
+**Order matters for `react-native`.** `@pulse-circle/react-native` declares a
+runtime dependency on `@pulse-circle/core`, so `core` must already be on the
+registry or the RN package installs broken. Bootstrap `@pulse-circle/core`
+first, confirm `npm view @pulse-circle/core version`, then bootstrap
+`@pulse-circle/react-native`. (`@pulse-circle/web` bundles core at build time
+and has zero runtime dependencies, so it is unaffected.)
+
 Every release after that is tokenless.
 
 Any stale `NPM_TOKEN` repository secret can be deleted once trusted publishing

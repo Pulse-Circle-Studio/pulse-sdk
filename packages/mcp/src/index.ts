@@ -32,24 +32,45 @@ const SETUP: Record<(typeof PLATFORMS)[number], string> = {
   Pulse.track('app_open');
   Pulse.identify(userId);             // after login
 Script tag: https://cdn.jsdelivr.net/npm/@pulse-circle/web/dist/pulse.iife.global.js
+Events go to ${BASE} by default — no endpoint config needed.
 NOTE: track() is for product events, not revenue. Subscription revenue/MRR/LTV
 come from connecting your store/billing in Pulse (see pulse_connect).`,
-  'react-native': `Raw ingestion API (RN SDK package pending):
-  POST ${BASE}/v1/batch  Authorization: Bearer PULSE_API_KEY
-  body { batch: [{ type:'track', anonymous_id, event, idempotency_key, timestamp }] }`,
-  swift: `Install PulseSDK for iOS (iOS 15+, Swift 5.9+, zero dependencies) via Swift Package Manager:
-  Xcode → Add Package → https://github.com/Pulse-Circle-Studio/pulse-sdk-native  (from: "0.1.0")
+  'react-native': `Install @pulse-circle/react-native (pure JS, no native modules, works in Expo Go):
+  npm install @pulse-circle/react-native @react-native-async-storage/async-storage
+  import { Pulse } from '@pulse-circle/react-native';
+  Pulse.init(PULSE_API_KEY);          // pk_... publishable key
+  Pulse.track('screen_opened', { screen: 'Home' });
+  Pulse.identify(userId);             // after login
+  Pulse.reset();                      // on logout
+async-storage is a peer dependency — it persists the queue across launches.
+@react-native-community/netinfo is optional (flush the moment the network returns).
+NOTE: track() is for product events, not revenue. Subscription revenue/MRR/LTV
+come from connecting your store/billing in Pulse (see pulse_connect).`,
+  swift: `Install PulseSDK for iOS (iOS 15+, Swift 5.9+, zero dependencies).
+
+Swift Package Manager:
+  Xcode → Add Package → https://github.com/Pulse-Circle-Studio/pulse-sdk-native  (from: "0.1.1")
+CocoaPods — the pod is 'pulse-circle', the module is still PulseSDK:
+  pod 'pulse-circle', '~> 0.1.1'
+
   import PulseSDK
   Pulse.initialize(apiKey: PULSE_API_KEY)   // pk_... publishable key
   Pulse.track("app_open")
   Pulse.identify(userId)                    // after login
+  Pulse.reset()                             // on logout
 Full agent guide: https://raw.githubusercontent.com/Pulse-Circle-Studio/pulse-sdk-native/main/llms.txt
 NOTE: track() is for product events, not revenue. Subscription revenue/MRR/LTV
 come from connecting your store/billing in Pulse (see pulse_connect).`,
-  kotlin: `Android SDK (studio.pulsecircle.pulse:pulse-sdk-android on Maven Central) is pending
-its first publish — until then use the raw ingestion API:
-  POST ${BASE}/v1/batch  Authorization: Bearer PULSE_API_KEY
-  body { batch: [{ type:'track', anonymous_id, event, idempotency_key, timestamp }] }
+  kotlin: `Install the Pulse Android SDK from Maven Central (Android 7.0+/API 24, zero dependencies):
+  // build.gradle.kts
+  implementation("studio.pulsecircle.pulse:pulse-sdk-android:0.1.0")
+
+  import studio.pulsecircle.pulse.android.Pulse
+  Pulse.init(context, PULSE_API_KEY)  // pk_... publishable key; any Context
+  Pulse.track("app_open")
+  Pulse.identify(userId)              // after login
+  Pulse.reset()                       // on logout
+init() is safe to call more than once; every method is a no-op until it runs.
 Full agent guide: https://raw.githubusercontent.com/Pulse-Circle-Studio/pulse-sdk-native/main/llms.txt
 NOTE: track() is for product events, not revenue. Subscription revenue/MRR/LTV
 come from connecting your store/billing in Pulse (see pulse_connect).`,

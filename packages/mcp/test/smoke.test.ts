@@ -105,21 +105,33 @@ describe('@pulse-circle/mcp stdio server', () => {
     expect(text).toContain('not revenue');
   }, 15_000);
 
-  test('react-native setup guide points at the raw ingestion API', async () => {
+  // Every platform now has a published SDK, so no guide may fall back to the
+  // raw ingestion API — an agent that reads one writes hand-rolled fetch code
+  // instead of installing the package. These assertions are the drift guard:
+  // they fail if a guide ever reverts to "SDK pending".
+  test('react-native setup guide installs the published npm SDK', async () => {
     const text = await callTool('pulse_setup_guide', { platform: 'react-native' });
-    expect(text).toContain('https://api.pulse.pulsecircle.studio/v1/batch');
-    expect(text).toContain('idempotency_key');
+    expect(text).toContain('npm install @pulse-circle/react-native');
+    expect(text).toContain('@react-native-async-storage/async-storage');
+    expect(text).toContain("Pulse.init(");
+    expect(text).not.toContain('/v1/batch');
   }, 15_000);
 
-  test('swift guide installs the native SDK via SPM; kotlin falls back to raw API', async () => {
+  test('swift guide offers SPM and CocoaPods', async () => {
     const swift = await callTool('pulse_setup_guide', { platform: 'swift' });
     expect(swift).toContain('https://github.com/Pulse-Circle-Studio/pulse-sdk-native');
+    expect(swift).toContain("pod 'pulse-circle'");
     expect(swift).toContain('Pulse.initialize(apiKey:');
     expect(swift).toContain('llms.txt');
+    expect(swift).not.toContain('/v1/batch');
+  }, 15_000);
 
+  test('kotlin guide installs the Maven Central artifact, not the raw API', async () => {
     const kotlin = await callTool('pulse_setup_guide', { platform: 'kotlin' });
-    expect(kotlin).toContain('https://api.pulse.pulsecircle.studio/v1/batch');
-    expect(kotlin).toContain('Maven Central');
+    expect(kotlin).toContain('studio.pulsecircle.pulse:pulse-sdk-android');
+    expect(kotlin).toContain('Pulse.init(context,');
+    expect(kotlin).toContain('llms.txt');
+    expect(kotlin).not.toContain('/v1/batch');
   }, 15_000);
 
   test('app_store connect guide: Vendor Number required, forward-not-replace', async () => {

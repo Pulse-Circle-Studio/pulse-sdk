@@ -77,3 +77,50 @@ Every release after that is tokenless.
 
 Any stale `NPM_TOKEN` repository secret can be deleted once trusted publishing
 is configured.
+
+## Listing the MCP server in the official MCP Registry
+
+The registry stores **metadata only** — the package still comes from npm. It
+also verifies ownership two ways, so both have to line up:
+
+1. `packages/mcp/package.json` carries `"mcpName": "studio.pulsecircle/pulse"`,
+   which the registry reads from the **published** tarball. Publish the npm
+   package first (tag `mcp-v0.1.1`); a server.json claiming a name the
+   published package does not declare is rejected.
+2. The name's namespace must be one you can prove. `studio.pulsecircle` is the
+   reverse-DNS form of `pulsecircle.studio` — the same convention as the Maven
+   namespace — and is proved by a DNS TXT record.
+
+```bash
+brew install mcp-publisher   # or the release binary, see the registry docs
+
+# One-time: generate a key pair and publish its public half at the APEX.
+# Apex, not a selector: MCP DNS auth is SPF-style. A record under
+# _mcp-auth.pulsecircle.studio is invisible to the registry and fails with a
+# generic signature error.
+openssl genpkey -algorithm Ed25519 -out mcp-registry-key.pem
+PUB="$(openssl pkey -in mcp-registry-key.pem -pubout -outform DER | tail -c 32 | base64)"
+echo "pulsecircle.studio. IN TXT \"v=MCPv1; k=ed25519; p=${PUB}\""
+# ^ add that TXT record, alongside the existing Sonatype one, then:
+
+cd packages/mcp
+mcp-publisher login dns --domain pulsecircle.studio --private-key mcp-registry-key.pem
+mcp-publisher validate
+mcp-publisher publish
+```
+
+Keep `mcp-registry-key.pem` out of the repo — it is the credential for the
+whole namespace. If you rotate it, delete the old TXT record: a stale one is
+tried first and fails verification.
+
+On macOS the system `openssl` is LibreSSL and has no Ed25519 in `genpkey`; use
+`brew install openssl@3` and call it by full path, or switch to the ECDSA P-384
+variant from the registry docs.
+
+Simpler alternative: `mcp-publisher login github` (device flow). It works with
+no DNS at all, but the name then has to be `io.github.pulse-circle-studio/pulse`
+and you must be an **Owner** of the GitHub org, not just a member.
+
+Bump `version` in **both** `package.json` and `server.json` on every release —
+the registry rejects a server version that does not match the npm version it
+points at.

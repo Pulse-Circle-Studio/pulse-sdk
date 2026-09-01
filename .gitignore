@@ -5,3 +5,6 @@ dist-tsc/
 .DS_Store
 coverage/
 .size-limit.json
+
+mcp-registry-key.pem
+*.pem

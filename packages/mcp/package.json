@@ -1,6 +1,7 @@
 {
   "name": "@pulse-circle/mcp",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "mcpName": "studio.pulsecircle/pulse",
   "description": "Local (stdio) MCP server for Pulse: setup and connect guides for AI coding agents, offline.",
   "license": "MIT",
   "repository": {

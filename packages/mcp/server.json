@@ -2,18 +2,32 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "studio.pulsecircle/pulse",
   "title": "Pulse",
-  "description": "Pulse growth analytics: SDK install and RevenueCat/App Store/Google Play setup guides, offline.",
+  "description": "Ask about revenue, MRR, ad spend, LTV and CAC; install the Pulse SDK. Read-only.",
   "websiteUrl": "https://pulse.pulsecircle.studio/docs/mcp/",
   "repository": {
     "url": "https://github.com/Pulse-Circle-Studio/pulse-sdk",
     "source": "github"
   },
-  "version": "0.1.1",
+  "version": "0.1.2",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.pulse.pulsecircle.studio/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Bearer <your Pulse API key> — from Settings in the Pulse web app. Clients that speak OAuth 2.1 can omit this and authorize instead.",
+          "isRequired": false,
+          "isSecret": true
+        }
+      ]
+    }
+  ],
   "packages": [
     {
       "registryType": "npm",
       "identifier": "@pulse-circle/mcp",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "transport": {
         "type": "stdio"
       }

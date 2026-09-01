@@ -1,6 +1,6 @@
 {
   "name": "@pulse-circle/mcp",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "mcpName": "studio.pulsecircle/pulse",
   "description": "MCP server for Pulse growth analytics: install the SDK and connect RevenueCat, App Store and Google Play from an AI coding agent. Runs offline over stdio.",
   "license": "MIT",

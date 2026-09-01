@@ -3,9 +3,19 @@
 // build time — hardened sandboxes that block our domains can still get the
 // setup/connect guides, because delivery happens over npm, not HTTP.
 // pulse_verify / pulse_ask need the Pulse API and stay on the remote MCP.
+import { createRequire } from 'node:module';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
 import { z } from 'zod';
+
+// Read the version rather than repeat it. A hardcoded string here drifted from
+// package.json on the 0.1.1 bump and failed the smoke test's drift guard —
+// which is the guard doing its job, but the duplication is the actual bug.
+// dist/index.js sits one level below the package root, and npm always ships
+// package.json regardless of the "files" list.
+const PKG_VERSION = (
+  createRequire(import.meta.url)('../package.json') as { version: string }
+).version;
 
 const BASE = 'https://api.pulse.pulsecircle.studio';
 const HOOKS = 'https://hooks.pulse.pulsecircle.studio';
@@ -61,7 +71,7 @@ const CONNECT: Record<(typeof SOURCES)[number], string> = {
     'real-time developer notifications → ' + APP + '/connections → Google Play.',
 };
 
-const server = new McpServer({ name: 'pulse-local', version: '0.1.0' });
+const server = new McpServer({ name: 'pulse-local', version: PKG_VERSION });
 
 server.registerTool(
   'pulse_setup_guide',

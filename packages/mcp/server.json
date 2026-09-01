@@ -1,7 +1,9 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "studio.pulsecircle/pulse",
-  "description": "Pulse SDK setup and store-connection guides for AI coding agents — fully offline, everything baked in at build time.",
+  "title": "Pulse",
+  "description": "Pulse SDK setup and store-connection guides for AI coding agents, fully offline.",
+  "websiteUrl": "https://pulse.pulsecircle.studio/docs/mcp/",
   "repository": {
     "url": "https://github.com/Pulse-Circle-Studio/pulse-sdk",
     "source": "github"

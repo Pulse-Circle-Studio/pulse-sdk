@@ -92,12 +92,21 @@ const CONNECT: Record<(typeof SOURCES)[number], string> = {
     'real-time developer notifications → ' + APP + '/connections → Google Play.',
 };
 
-const server = new McpServer({ name: 'pulse-local', version: PKG_VERSION });
+// serverInfo.name is what a client shows in its server list, so it matches the
+// registry entry (studio.pulsecircle/pulse) rather than an internal codename.
+const server = new McpServer({ name: 'pulse', version: PKG_VERSION });
 
+// A tool description is the only thing an agent reads when choosing a tool, so
+// each one names the nouns a user would actually say and states WHEN to reach
+// for it. "Returns X" loses to "use when the user asks X".
 server.registerTool(
   'pulse_setup_guide',
   {
-    description: 'Step-by-step Pulse SDK install for a platform. Apply the snippet yourself.',
+    description:
+      'Use when the user wants to add Pulse product analytics or event tracking to an app, ' +
+      'or asks how to install the Pulse SDK. Returns the install command and code snippet ' +
+      'for web, react-native, swift (iOS) or kotlin (Android) — apply it to the codebase ' +
+      'yourself. Read-only: returns documentation, reads no account data.',
     inputSchema: { platform: z.enum(PLATFORMS) },
   },
   async ({ platform }) => ({ content: [{ type: 'text', text: SETUP[platform] }] }),
@@ -106,7 +115,11 @@ server.registerTool(
 server.registerTool(
   'pulse_connect',
   {
-    description: 'How to connect a Pulse revenue/store source for MRR, LTV and revenue.',
+    description:
+      'Use when the user wants subscription revenue, MRR, LTV, trials or refunds in Pulse, ' +
+      'or asks how to connect RevenueCat, the Apple App Store or Google Play. Returns the ' +
+      'setup steps for that source: which keys to create and where to paste them. ' +
+      'Read-only: returns documentation, connects nothing itself.',
     inputSchema: { source: z.enum(SOURCES) },
   },
   async ({ source }) => ({ content: [{ type: 'text', text: CONNECT[source] }] }),

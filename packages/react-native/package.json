@@ -9,7 +9,22 @@
     "directory": "packages/react-native"
   },
   "homepage": "https://github.com/Pulse-Circle-Studio/pulse-sdk/tree/main/packages/react-native#readme",
-  "keywords": ["analytics", "react-native", "expo", "events", "tracking", "pulse", "offline-first"],
+  "keywords": [
+    "analytics",
+    "product-analytics",
+    "growth-analytics",
+    "react-native",
+    "expo",
+    "ios",
+    "android",
+    "events",
+    "tracking",
+    "attribution",
+    "funnel",
+    "subscription-apps",
+    "offline-first",
+    "pulse"
+  ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {

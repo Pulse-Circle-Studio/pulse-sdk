@@ -2,7 +2,7 @@
   "name": "@pulse-circle/mcp",
   "version": "0.1.1",
   "mcpName": "studio.pulsecircle/pulse",
-  "description": "Local (stdio) MCP server for Pulse: setup and connect guides for AI coding agents, offline.",
+  "description": "MCP server for Pulse growth analytics: install the SDK and connect RevenueCat, App Store and Google Play from an AI coding agent. Runs offline over stdio.",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -11,12 +11,21 @@
   },
   "homepage": "https://github.com/Pulse-Circle-Studio/pulse-sdk/tree/main/packages/mcp#readme",
   "keywords": [
-    "pulse",
-    "analytics",
     "mcp",
+    "mcp-server",
     "model-context-protocol",
     "claude",
-    "ai-agent"
+    "cursor",
+    "ai-agent",
+    "growth-analytics",
+    "product-analytics",
+    "revenue",
+    "mrr",
+    "subscriptions",
+    "revenuecat",
+    "app-store",
+    "google-play",
+    "pulse"
   ],
   "type": "module",
   "bin": {

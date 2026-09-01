@@ -11,12 +11,16 @@
   "homepage": "https://github.com/Pulse-Circle-Studio/pulse-sdk/tree/main/packages/web#readme",
   "keywords": [
     "analytics",
-    "web analytics",
+    "web-analytics",
+    "product-analytics",
+    "growth-analytics",
     "events",
     "tracking",
-    "pulse",
+    "attribution",
+    "utm",
+    "funnel",
     "offline-first",
-    "utm"
+    "pulse"
   ],
   "type": "module",
   "sideEffects": false,

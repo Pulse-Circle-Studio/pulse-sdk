@@ -9,7 +9,17 @@
     "directory": "packages/core"
   },
   "homepage": "https://github.com/Pulse-Circle-Studio/pulse-sdk/tree/main/packages/core#readme",
-  "keywords": ["analytics", "events", "tracking", "pulse", "offline-first", "idempotent"],
+  "keywords": [
+    "analytics",
+    "product-analytics",
+    "events",
+    "tracking",
+    "attribution",
+    "offline-first",
+    "idempotent",
+    "event-queue",
+    "pulse"
+  ],
   "type": "module",
   "sideEffects": false,
   "main": "./dist/index.cjs",

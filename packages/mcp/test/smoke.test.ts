@@ -86,7 +86,9 @@ describe('@pulse-circle/mcp stdio server', () => {
     })) as { serverInfo: { name: string; version: string } };
     send({ method: 'notifications/initialized' });
 
-    expect(init.serverInfo.name).toBe('pulse-local');
+    // Matches the registry entry studio.pulsecircle/pulse — this string is what
+    // a client displays in its server list.
+    expect(init.serverInfo.name).toBe('pulse');
     // Same drift guard as core's SDK_VERSION test: the version the server
     // announces must match packages/mcp/package.json.
     expect(init.serverInfo.version).toBe(pkgJson.version);

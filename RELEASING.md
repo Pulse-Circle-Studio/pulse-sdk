@@ -104,10 +104,19 @@ echo "pulsecircle.studio. IN TXT \"v=MCPv1; k=ed25519; p=${PUB}\""
 # ^ add that TXT record, alongside the existing Sonatype one, then:
 
 cd packages/mcp
-mcp-publisher login dns --domain pulsecircle.studio --private-key mcp-registry-key.pem
+# --private-key takes the 32-byte seed as 64 HEX CHARACTERS, not a path to the
+# PEM. Passing the filename gets you "failed to decode private key", which
+# reads like a bad key rather than a wrong argument type.
+PRIVATE_KEY=$(openssl pkey -in mcp-registry-key.pem -noout -text \
+  | grep -A3 'priv:' | tail -n +2 | tr -d ' :\n')
+[ ${#PRIVATE_KEY} -eq 64 ] || { echo "expected 64 hex chars, got ${#PRIVATE_KEY}"; }
+mcp-publisher login dns --domain pulsecircle.studio --private-key "$PRIVATE_KEY"
 mcp-publisher validate
 mcp-publisher publish
 ```
+
+On macOS use the Homebrew openssl for that extraction too
+(`/opt/homebrew/opt/openssl@3/bin/openssl`) — see the LibreSSL note below.
 
 Keep `mcp-registry-key.pem` out of the repo — it is the credential for the
 whole namespace. If you rotate it, delete the old TXT record: a stale one is
@@ -122,5 +131,16 @@ no DNS at all, but the name then has to be `io.github.pulse-circle-studio/pulse`
 and you must be an **Owner** of the GitHub org, not just a member.
 
 Bump `version` in **both** `package.json` and `server.json` on every release —
-the registry rejects a server version that does not match the npm version it
-points at.
+`server.json` has two of them, the top-level server version and
+`packages[0].version`.
+
+**Order matters, and it is the reverse of what feels natural.** npm first, the
+registry second:
+
+1. Push the tag `mcp-v<version>` — `publish.yml` publishes to npm over OIDC.
+   Wait for it to go green.
+2. Then run `mcp-publisher publish` locally.
+
+The registry resolves `packages[0].version` against npm to confirm the package
+declares the matching `mcpName`. Publish the registry entry first and it points
+at a version that does not exist yet.

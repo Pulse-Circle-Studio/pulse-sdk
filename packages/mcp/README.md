@@ -5,6 +5,11 @@ gives AI coding agents the Pulse SDK setup and store-connection guides —
 **fully offline**. Everything it serves is baked in at build time, so it works
 in hardened sandboxes where Pulse domains are blocked but npm is allowed.
 
+> Installing this with an AI agent (Cline, Claude Code, Cursor)? Point it at
+> [`llms-install.md`](./llms-install.md) — it covers choosing between this
+> offline server and the hosted one, both auth paths, and how to verify the
+> install.
+
 ## Add to Claude Code
 
 ```bash
